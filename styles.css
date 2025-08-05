@@ -391,6 +391,27 @@ p {
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(220, 38, 38, 0.2));
 }
 
+/* Muted indicator */
+.hero-video-container.muted::after {
+    content: '🔇 Click to unmute';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    z-index: 10;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.hero-video-container.muted:hover::after {
+    opacity: 1;
+}
+
 .video-controls {
     display: flex;
     align-items: center;

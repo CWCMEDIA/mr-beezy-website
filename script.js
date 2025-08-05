@@ -521,17 +521,32 @@ function initHeroVideoVolumeFade() {
         function unmuteVideo() {
             if (heroVideo.muted) {
                 heroVideo.muted = false;
+                // Remove muted indicator
+                const videoContainer = heroVideo.closest('.hero-video-container');
+                if (videoContainer) {
+                    videoContainer.classList.remove('muted');
+                }
                 // Remove event listeners after unmuting
                 document.removeEventListener('click', unmuteVideo);
                 document.removeEventListener('keydown', unmuteVideo);
                 document.removeEventListener('touchstart', unmuteVideo);
+                document.removeEventListener('scroll', unmuteVideo);
+                document.removeEventListener('mousemove', unmuteVideo);
             }
+        }
+        
+        // Add muted indicator
+        const videoContainer = heroVideo.closest('.hero-video-container');
+        if (videoContainer) {
+            videoContainer.classList.add('muted');
         }
         
         // Add event listeners for user interaction
         document.addEventListener('click', unmuteVideo);
         document.addEventListener('keydown', unmuteVideo);
         document.addEventListener('touchstart', unmuteVideo);
+        document.addEventListener('scroll', unmuteVideo);
+        document.addEventListener('mousemove', unmuteVideo);
         
         // Initial volume update
         updateVideoVolume();
@@ -554,6 +569,9 @@ function initLogoVideo() {
         // Show loading state
         logoVideo.style.opacity = '0';
         
+        // Force video to load and play
+        logoVideo.load();
+        
         // When video can start playing
         logoVideo.addEventListener('canplay', function() {
             this.classList.add('loaded');
@@ -561,6 +579,10 @@ function initLogoVideo() {
             if (navLogo) {
                 navLogo.classList.add('video-loaded');
             }
+            // Ensure it plays
+            this.play().catch(function(error) {
+                console.log('Logo video play failed:', error);
+            });
         });
         
         // When video ends, pause it to keep the final frame
@@ -596,5 +618,14 @@ function initLogoVideo() {
                 }
             }
         }, 3000); // 3 second timeout
+        
+        // Force play after a short delay for Safari
+        setTimeout(() => {
+            if (logoVideo.paused) {
+                logoVideo.play().catch(function(error) {
+                    console.log('Delayed logo video play failed:', error);
+                });
+            }
+        }, 100);
     }
 } 

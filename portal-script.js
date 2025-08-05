@@ -39,6 +39,9 @@ function initLogoVideo() {
         // Show loading state
         logoVideo.style.opacity = '0';
         
+        // Force video to load and play
+        logoVideo.load();
+        
         // When video can start playing
         logoVideo.addEventListener('canplay', function() {
             this.classList.add('loaded');
@@ -46,6 +49,10 @@ function initLogoVideo() {
             if (navLogo) {
                 navLogo.classList.add('video-loaded');
             }
+            // Ensure it plays
+            this.play().catch(function(error) {
+                console.log('Logo video play failed:', error);
+            });
         });
         
         // When video ends, pause it to keep the final frame
@@ -81,5 +88,14 @@ function initLogoVideo() {
                 }
             }
         }, 3000); // 3 second timeout
+        
+        // Force play after a short delay for Safari
+        setTimeout(() => {
+            if (logoVideo.paused) {
+                logoVideo.play().catch(function(error) {
+                    console.log('Delayed logo video play failed:', error);
+                });
+            }
+        }, 100);
     }
 } 
