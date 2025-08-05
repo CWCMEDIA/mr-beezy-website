@@ -68,15 +68,77 @@ body {
     align-items: center;
 }
 
+.nav-logo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 50px;
+    padding: 10px 15px;
+}
+
 .nav-logo a {
     text-decoration: none;
     color: var(--white);
+    position: relative;
+    z-index: 2;
 }
 
-.nav-logo h2 {
-    color: var(--white);
-    font-size: 1.5rem;
-    font-weight: 800;
+.logo-background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    border-radius: 50px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.logo-background-video.loaded {
+    opacity: 1;
+}
+
+/* Fallback background while video loads */
+.nav-logo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 50px;
+    z-index: 1;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.nav-logo.video-loaded::before {
+    opacity: 0;
+}
+
+.logo-image {
+    position: relative;
+    z-index: 2;
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    max-width: 200px;
+}
+
+/* Hover effects for the logo */
+.nav-logo:hover .logo-image {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+.nav-logo:hover .logo-background-video {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
 }
 
 .back-btn {

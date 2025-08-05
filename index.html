@@ -10,12 +10,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preload" href="paintbrush.mov" as="video" type="video/quicktime">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
+                <video class="logo-background-video" autoplay muted playsinline>
+                    <source src="paintbrush.mov" type="video/quicktime">
+                    <source src="paintbrush.mp4" type="video/mp4">
+                </video>
                 <img src="logo1.png" alt="Mr. Beezy" class="logo-image">
             </div>
             <ul class="nav-menu">
@@ -58,11 +63,12 @@
                 <div class="hero-buttons">
                     <a href="#contact" class="btn btn-primary">Book Mr. Beezy</a>
                     <a href="#about" class="btn btn-secondary">Learn More</a>
+                    <a href="portal.html" class="btn btn-secondary">My Services</a>
                 </div>
             </div>
             <div class="hero-visual">
                 <div class="hero-video-container">
-                    <video class="hero-video" autoplay muted loop playsinline poster="video-poster.jpg">
+                    <video class="hero-video" autoplay loop playsinline poster="video-poster.jpg">
                         <source src="mrbeezy-video.mp4" type="video/mp4">
                         <source src="mrbeezy-video.webm" type="video/webm">
                         Your browser does not support the video tag.

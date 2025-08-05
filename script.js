@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initFormHandling();
     initLoadingAnimation();
     initVideoModal();
+    initLogoVideo();
 });
 
 // ===== MOBILE NAVIGATION =====
@@ -92,6 +93,9 @@ function initScrollAnimations() {
             navbar.style.background = 'rgba(0, 0, 0, 0.95)';
         }
     });
+    
+    // Hero video volume fade on scroll
+    initHeroVideoVolumeFade();
 }
 
 // ===== FORM HANDLING =====
@@ -461,4 +465,110 @@ document.head.appendChild(rippleStyle);
 // Initialize portal card interactions
 document.addEventListener('DOMContentLoaded', function() {
     initPortalCardInteractions();
-}); 
+});
+
+// ===== HERO VIDEO VOLUME FADE =====
+function initHeroVideoVolumeFade() {
+    const heroVideo = document.querySelector('.hero-video');
+    
+    if (heroVideo) {
+        // Set initial volume
+        heroVideo.volume = 1;
+        
+        // Get hero section height for calculations
+        const heroSection = document.querySelector('.hero');
+        const heroHeight = heroSection ? heroSection.offsetHeight : window.innerHeight;
+        
+        // Throttle scroll events for performance
+        let ticking = false;
+        
+        function updateVideoVolume() {
+            const scrollY = window.scrollY;
+            const heroBottom = heroHeight;
+            
+            // Calculate volume based on scroll position
+            let volume = 1;
+            
+            if (scrollY > 0) {
+                // Start fading when we begin scrolling
+                const fadeStart = 0;
+                const fadeEnd = heroBottom * 0.8; // Fade to mute by 80% of hero height
+                
+                if (scrollY >= fadeEnd) {
+                    volume = 0; // Fully muted
+                } else if (scrollY > fadeStart) {
+                    // Linear fade from 1 to 0
+                    volume = 1 - (scrollY / fadeEnd);
+                }
+            }
+            
+            // Apply volume with smooth transition
+            heroVideo.volume = Math.max(0, Math.min(1, volume));
+            
+            ticking = false;
+        }
+        
+        // Handle scroll events
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(updateVideoVolume);
+                ticking = true;
+            }
+        });
+        
+        // Initial volume update
+        updateVideoVolume();
+    }
+}
+
+// ===== LOGO VIDEO HANDLING =====
+function initLogoVideo() {
+    const logoVideo = document.querySelector('.logo-background-video');
+    const navLogo = document.querySelector('.nav-logo');
+    
+    if (logoVideo) {
+        // Show loading state
+        logoVideo.style.opacity = '0';
+        
+        // When video can start playing
+        logoVideo.addEventListener('canplay', function() {
+            this.classList.add('loaded');
+            this.style.opacity = '1';
+            if (navLogo) {
+                navLogo.classList.add('video-loaded');
+            }
+        });
+        
+        // When video ends, pause it to keep the final frame
+        logoVideo.addEventListener('ended', function() {
+            this.pause();
+            // Optional: Add a subtle effect to indicate it's "dried"
+            this.style.filter = 'brightness(1.1) contrast(1.05)';
+        });
+        
+        // Ensure video plays on page load/refresh
+        logoVideo.addEventListener('loadedmetadata', function() {
+            this.currentTime = 0;
+            this.play();
+        });
+        
+        // Handle video loading errors
+        logoVideo.addEventListener('error', function() {
+            console.log('Logo video failed to load');
+            // Keep the fallback background visible
+            if (navLogo) {
+                navLogo.classList.remove('video-loaded');
+            }
+        });
+        
+        // Add timeout for slow connections
+        setTimeout(() => {
+            if (logoVideo.readyState < 2) { // HAVE_CURRENT_DATA
+                console.log('Video taking too long to load, showing fallback');
+                if (navLogo) {
+                    navLogo.classList.remove('video-loaded');
+                }
+            }
+        }, 3000); // 3 second timeout
+    }
+} 
