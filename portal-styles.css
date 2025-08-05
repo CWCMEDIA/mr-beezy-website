@@ -245,9 +245,24 @@ body {
 }
 
 .card-icon {
-    font-size: 4rem;
+    font-size: 3rem;
     margin-bottom: 1.5rem;
-    display: block;
+    text-align: center;
+}
+
+.portal-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--primary-red);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    transition: all var(--transition-normal);
+}
+
+.motivation-card:hover .portal-image {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
 }
 
 .motivation-card h3 {
