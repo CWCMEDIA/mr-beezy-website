@@ -107,8 +107,8 @@ function initFormHandling() {
             const data = Object.fromEntries(formData);
             
             // Basic validation
-            if (!data.name || !data.email || !data.service) {
-                showNotification('Please fill in all required fields.', 'error');
+            if (!data.name || !data.email) {
+                showNotification('Please fill in your name and email.', 'error');
                 return;
             }
             
@@ -334,6 +334,25 @@ function initVideoModal() {
                 video.pause();
             }
         });
+
+        // Handle mute/unmute functionality
+        const muteBtn = document.getElementById('muteBtn');
+        const muteIcon = muteBtn.querySelector('.mute-icon');
+        const unmuteIcon = muteBtn.querySelector('.unmute-icon');
+        
+        if (muteBtn) {
+            muteBtn.addEventListener('click', function() {
+                if (video.muted) {
+                    video.muted = false;
+                    muteIcon.style.display = 'none';
+                    unmuteIcon.style.display = 'block';
+                } else {
+                    video.muted = true;
+                    muteIcon.style.display = 'block';
+                    unmuteIcon.style.display = 'none';
+                }
+            });
+        }
         
         // Show controls on video hover
         const videoContainer = document.querySelector('.hero-video-container');
