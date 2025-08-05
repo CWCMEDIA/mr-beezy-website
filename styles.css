@@ -512,10 +512,102 @@ p {
 .portal-card {
     grid-column: 2 / -1;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.portal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.portal-card:hover::before {
+    left: 100%;
+}
+
+.portal-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(220, 38, 38, 0.2);
+    border-color: var(--primary-red);
+}
+
+.portal-card:hover h3 {
+    color: var(--primary-red);
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+.portal-card:hover p {
+    color: var(--dark-gray);
+    transition: color 0.3s ease;
+}
+
+.portal-card:hover .service-icon {
+    transform: rotate(360deg) scale(1.2);
+    transition: all 0.5s ease;
+}
+
+.portal-card:hover .service-features li {
+    transform: translateX(5px);
+    transition: transform 0.3s ease;
+}
+
+.portal-card:hover .service-features li::before {
+    color: var(--primary-red);
+    transform: scale(1.2);
+    transition: all 0.3s ease;
 }
 
 .portal-cta {
     margin-top: 2rem;
+    transition: all 0.3s ease;
+}
+
+.portal-card:hover .portal-cta {
+    transform: translateY(-5px);
+}
+
+.portal-card .btn-primary {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.portal-card .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.portal-card:hover .btn-primary::before {
+    left: 100%;
+}
+
+.portal-card:hover .btn-primary {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+}
+
+/* Mouse tracking effect */
+.portal-card {
+    background: linear-gradient(135deg, var(--white) 0%, #fafafa 100%);
+}
+
+.portal-card:hover {
+    background: linear-gradient(135deg, #fff5f5 0%, var(--white) 100%);
 }
 
 /* ===== TESTIMONIALS SECTION ===== */
