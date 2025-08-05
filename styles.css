@@ -587,25 +587,11 @@ p {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
-.service-icon {
-    font-size: 3rem;
+.service-card h3 {
+    color: var(--dark-gray);
+    font-size: 1.5rem;
     margin-bottom: 1rem;
     text-align: center;
-}
-
-.service-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid var(--primary-red);
-    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
-    transition: all var(--transition-normal);
-}
-
-.service-card:hover .service-image {
-    transform: scale(1.1);
-    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
 }
 
 .service-card h3 {
