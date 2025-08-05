@@ -472,8 +472,9 @@ function initHeroVideoVolumeFade() {
     const heroVideo = document.querySelector('.hero-video');
     
     if (heroVideo) {
-        // Set initial volume
+        // Set initial volume and mute state
         heroVideo.volume = 1;
+        heroVideo.muted = true; // Start muted for autoplay compatibility
         
         // Get hero section height for calculations
         const heroSection = document.querySelector('.hero');
@@ -516,8 +517,31 @@ function initHeroVideoVolumeFade() {
             }
         });
         
+        // Unmute video on first user interaction
+        function unmuteVideo() {
+            if (heroVideo.muted) {
+                heroVideo.muted = false;
+                // Remove event listeners after unmuting
+                document.removeEventListener('click', unmuteVideo);
+                document.removeEventListener('keydown', unmuteVideo);
+                document.removeEventListener('touchstart', unmuteVideo);
+            }
+        }
+        
+        // Add event listeners for user interaction
+        document.addEventListener('click', unmuteVideo);
+        document.addEventListener('keydown', unmuteVideo);
+        document.addEventListener('touchstart', unmuteVideo);
+        
         // Initial volume update
         updateVideoVolume();
+        
+        // Ensure video plays on page load
+        heroVideo.addEventListener('loadedmetadata', function() {
+            this.play().catch(function(error) {
+                console.log('Autoplay failed:', error);
+            });
+        });
     }
 }
 
@@ -549,7 +573,9 @@ function initLogoVideo() {
         // Ensure video plays on page load/refresh
         logoVideo.addEventListener('loadedmetadata', function() {
             this.currentTime = 0;
-            this.play();
+            this.play().catch(function(error) {
+                console.log('Logo video autoplay failed:', error);
+            });
         });
         
         // Handle video loading errors

@@ -58,7 +58,9 @@ function initLogoVideo() {
         // Ensure video plays on page load/refresh
         logoVideo.addEventListener('loadedmetadata', function() {
             this.currentTime = 0;
-            this.play();
+            this.play().catch(function(error) {
+                console.log('Logo video autoplay failed:', error);
+            });
         });
         
         // Handle video loading errors
