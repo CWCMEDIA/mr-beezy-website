@@ -594,6 +594,27 @@ p {
     text-align: center;
 }
 
+.service-image {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.service-photo {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--primary-red);
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.2);
+    transition: all var(--transition-normal);
+}
+
+.service-card:hover .service-photo {
+    transform: scale(1.1);
+    box-shadow: 0 12px 35px rgba(220, 38, 38, 0.3);
+    border-color: var(--primary-red-dark);
+}
+
 .service-card h3 {
     color: var(--black);
     margin-bottom: 1rem;
