@@ -186,7 +186,7 @@
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-image">
-                        <img src="beezystock/Business1.jpeg" alt="Mr. Beezy Corporate Speaking" class="service-photo">
+                        <img src="beezystock/Business1.jpeg" alt="Mr. Beezy Corporate Speaking" class="service-photo" onclick="openImageModal(this.src)">
                     </div>
                     <h3>Corporate Events</h3>
                     <p>Energize your team with powerful motivation and leadership insights that drive results and boost morale.</p>
@@ -199,7 +199,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-image">
-                        <img src="beezystock/school30.jpeg" alt="Mr. Beezy Education Speaking" class="service-photo">
+                        <img src="beezystock/school30.jpeg" alt="Mr. Beezy Education Speaking" class="service-photo" onclick="openImageModal(this.src)">
                     </div>
                     <h3>Educational Institutions</h3>
                     <p>Inspire students and educators with messages of perseverance, goal-setting, and personal excellence.</p>
@@ -212,7 +212,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-image">
-                        <img src="beezystock/sport1.jpeg" alt="Mr. Beezy Sports Speaking" class="service-photo">
+                        <img src="beezystock/sport1.jpeg" alt="Mr. Beezy Sports Speaking" class="service-photo" onclick="openImageModal(this.src)">
                     </div>
                     <h3>Sports & Athletics</h3>
                     <p>Unlock peak performance with mental toughness training and athletic motivation strategies.</p>
@@ -224,6 +224,9 @@
                     </ul>
                 </div>
                 <div class="service-card">
+                    <div class="service-image">
+                        <img src="beezystock/school29.jpeg" alt="Mr. Beezy Personal Development" class="service-photo" onclick="openImageModal(this.src)">
+                    </div>
                     <h3>Personal Development</h3>
                     <p>Transform individual lives through one-on-one coaching and small group sessions.</p>
                     <ul class="service-features">
@@ -403,6 +406,14 @@
             </div>
         </div>
     </footer>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal">
+        <span class="close-modal" onclick="closeImageModal()">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" class="modal-image" src="" alt="Mr. Beezy Speaking">
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
