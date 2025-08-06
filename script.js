@@ -467,6 +467,77 @@ document.addEventListener('DOMContentLoaded', function() {
     initPortalCardInteractions();
 });
 
+// ===== EXIT INTENT POPUP FUNCTIONALITY =====
+let exitIntentShown = false;
+let mouseLeaveTimeout;
+
+function initExitIntent() {
+    // Track mouse movement
+    document.addEventListener('mouseleave', function(e) {
+        if (e.clientY <= 0 && !exitIntentShown) {
+            showExitIntent();
+        }
+    });
+    
+    // Track mouse position for exit intent
+    document.addEventListener('mousemove', function(e) {
+        const threshold = 50; // pixels from edge
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        
+        // Check if mouse is near the top edge (most common exit intent)
+        if (e.clientY <= threshold && !exitIntentShown) {
+            clearTimeout(mouseLeaveTimeout);
+            mouseLeaveTimeout = setTimeout(() => {
+                showExitIntent();
+            }, 100); // Small delay to prevent accidental triggers
+        }
+    });
+    
+    // Prevent showing multiple times
+    document.addEventListener('click', function() {
+        exitIntentShown = true;
+    });
+}
+
+function showExitIntent() {
+    if (exitIntentShown) return;
+    
+    const popup = document.getElementById('exitIntentPopup');
+    if (popup) {
+        popup.style.display = 'block';
+        exitIntentShown = true;
+        
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeExitPopup() {
+    const popup = document.getElementById('exitIntentPopup');
+    if (popup) {
+        popup.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+function goToContact() {
+    closeExitPopup();
+    // Scroll to contact section
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Initialize exit intent on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Only show exit intent after user has been on page for 30 seconds
+    setTimeout(() => {
+        initExitIntent();
+    }, 30000);
+});
+
 // ===== IMAGE MODAL FUNCTIONALITY =====
 function openImageModal(imageSrc) {
     const modal = document.getElementById('imageModal');
