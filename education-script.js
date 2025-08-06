@@ -1,4 +1,4 @@
-// Education Services Page JavaScript
+// Portal Page JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     // Add smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add hover effects for service cards
-    const serviceCards = document.querySelectorAll('.service-card');
-    serviceCards.forEach(card => {
+    // Add hover effects for motivation cards
+    const motivationCards = document.querySelectorAll('.motivation-card');
+    motivationCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-10px)';
         });
@@ -25,27 +25,51 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = 'translateY(0)';
         });
     });
+    
+    // Initialize carousel
+    initCarousel();
+});
 
-    // Add scroll reveal animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+// ===== CAROUSEL FUNCTIONALITY =====
+let currentSlideIndex = 0;
+const totalSlides = 10; // Number of school photos
 
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
+function initCarousel() {
+    updateCarousel();
+    
+    // Auto-advance carousel every 4 seconds
+    setInterval(() => {
+        moveCarousel(1);
+    }, 4000);
+}
 
-    // Observe elements for animation
-    document.querySelectorAll('.service-card, .exam-elite-content, .cta-content').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+function moveCarousel(direction) {
+    currentSlideIndex += direction;
+    
+    if (currentSlideIndex >= totalSlides) {
+        currentSlideIndex = 0;
+    } else if (currentSlideIndex < 0) {
+        currentSlideIndex = totalSlides - 1;
+    }
+    
+    updateCarousel();
+}
+
+function currentSlide(index) {
+    currentSlideIndex = index - 1;
+    updateCarousel();
+}
+
+function updateCarousel() {
+    const track = document.querySelector('.carousel-track');
+    const dots = document.querySelectorAll('.dot');
+    
+    if (track) {
+        track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+    }
+    
+    // Update dots
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlideIndex);
     });
-}); 
+} 
