@@ -90,6 +90,30 @@ body {
     color: var(--primary-red);
 }
 
+.nav-back {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--transition-normal);
+    position: relative;
+    padding: 8px 16px;
+    border: 2px solid var(--white);
+    border-radius: 6px;
+    background: transparent;
+}
+
+.nav-link:hover {
+    color: var(--primary-red);
+    background: var(--white);
+    border-color: var(--white);
+}
+
 /* ===== HERO SECTION ===== */
 .hero {
     min-height: 100vh;
