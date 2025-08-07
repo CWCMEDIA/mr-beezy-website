@@ -278,7 +278,8 @@ function initCounterAnimation() {
     
     const animateCounter = (element) => {
         const target = parseInt(element.textContent.replace(/\D/g, ''));
-        const suffix = element.textContent.replace(/\d/g, '');
+        // Extract suffix more carefully - only get the + sign
+        const suffix = element.textContent.includes('+') ? '+' : '';
         let current = 0;
         const increment = target / 50;
         
@@ -288,7 +289,18 @@ function initCounterAnimation() {
                 current = target;
                 clearInterval(timer);
             }
-            element.textContent = Math.floor(current) + suffix;
+            
+            // Format number with comma for 100,000+
+            let formattedNumber;
+            if (target >= 100000) {
+                // Manually format with comma
+                const num = Math.floor(current);
+                formattedNumber = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            } else {
+                formattedNumber = Math.floor(current);
+            }
+            
+            element.textContent = formattedNumber + suffix;
         }, 30);
     };
     
@@ -304,11 +316,29 @@ function initCounterAnimation() {
     stats.forEach(stat => observer.observe(stat));
 }
 
+// Scroll reveal animation
+function initScrollReveal() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    const scrollElements = document.querySelectorAll('.scroll-reveal');
+    scrollElements.forEach(el => observer.observe(el));
+}
+
 // Initialize additional features
 document.addEventListener('DOMContentLoaded', function() {
     initParallaxEffect();
     initTypingEffect();
     initCounterAnimation();
+    initScrollReveal();
 });
 
 // ===== VIDEO CONTROLS =====
@@ -581,91 +611,127 @@ function initHeroVideoVolumeFade() {
     const heroVideo = document.querySelector('.hero-video');
     
     if (heroVideo) {
-        // Set initial volume and mute state
-        heroVideo.volume = 1;
-        heroVideo.muted = true; // Start muted for autoplay compatibility
+        // YouTube iframe volume control
+        let player = null;
+        let isMuted = true;
         
         // Get hero section height for calculations
         const heroSection = document.querySelector('.hero');
         const heroHeight = heroSection ? heroSection.offsetHeight : window.innerHeight;
         
-        // Throttle scroll events for performance
-        let ticking = false;
+        // Initialize YouTube Player API
+        function initYouTubePlayer() {
+            // Load YouTube API if not already loaded
+            if (!window.YT) {
+                const tag = document.createElement('script');
+                tag.src = 'https://www.youtube.com/iframe_api';
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            }
+            
+            // Create YouTube player when API is ready
+            window.onYouTubeIframeAPIReady = function() {
+                player = new YT.Player(heroVideo, {
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            };
+        }
         
-        function updateVideoVolume() {
-            const scrollY = window.scrollY;
-            const heroBottom = heroHeight;
+        function onPlayerReady(event) {
+            // Player is ready, start muted
+            event.target.mute();
+            isMuted = true;
             
-            // Calculate volume based on scroll position
-            let volume = 1;
+            // Start volume fade functionality
+            initVolumeFade();
+        }
+        
+        function onPlayerStateChange(event) {
+            // Handle player state changes if needed
+            console.log('Player state changed:', event.data);
+        }
+        
+        function initVolumeFade() {
+            // Throttle scroll events for performance
+            let ticking = false;
             
-            if (scrollY > 0) {
-                // Start fading when we begin scrolling
-                const fadeStart = 0;
-                const fadeEnd = heroBottom * 0.8; // Fade to mute by 80% of hero height
+            function updateVideoVolume() {
+                if (!player || !player.setVolume) return;
                 
-                if (scrollY >= fadeEnd) {
-                    volume = 0; // Fully muted
-                } else if (scrollY > fadeStart) {
-                    // Linear fade from 1 to 0
-                    volume = 1 - (scrollY / fadeEnd);
+                const scrollY = window.scrollY;
+                const heroBottom = heroHeight;
+                
+                // Calculate volume based on scroll position
+                let volume = 100; // YouTube uses 0-100 scale
+                
+                if (scrollY > 0) {
+                    // Start fading when we begin scrolling
+                    const fadeStart = 0;
+                    const fadeEnd = heroBottom * 0.8; // Fade to mute by 80% of hero height
+                    
+                    if (scrollY >= fadeEnd) {
+                        volume = 0; // Fully muted
+                    } else if (scrollY > fadeStart) {
+                        // Linear fade from 100 to 0
+                        volume = 100 - (scrollY / fadeEnd) * 100;
+                    }
                 }
+                
+                // Apply volume with smooth transition
+                const clampedVolume = Math.max(0, Math.min(100, volume));
+                player.setVolume(clampedVolume);
+                
+                // Update mute state based on volume
+                if (clampedVolume === 0 && !isMuted) {
+                    player.mute();
+                    isMuted = true;
+                } else if (clampedVolume > 0 && isMuted) {
+                    player.unMute();
+                    isMuted = false;
+                }
+                
+                ticking = false;
             }
             
-            // Apply volume with smooth transition
-            heroVideo.volume = Math.max(0, Math.min(1, volume));
-            
-            ticking = false;
-        }
-        
-        // Handle scroll events
-        window.addEventListener('scroll', function() {
-            if (!ticking) {
-                requestAnimationFrame(updateVideoVolume);
-                ticking = true;
-            }
-        });
-        
-        // Unmute video on first user interaction
-        function unmuteVideo() {
-            if (heroVideo.muted) {
-                heroVideo.muted = false;
-                // Remove muted indicator
-                const videoContainer = heroVideo.closest('.hero-video-container');
-                if (videoContainer) {
-                    videoContainer.classList.remove('muted');
+            // Handle scroll events
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(updateVideoVolume);
+                    ticking = true;
                 }
-                // Remove event listeners after unmuting
-                document.removeEventListener('click', unmuteVideo);
-                document.removeEventListener('keydown', unmuteVideo);
-                document.removeEventListener('touchstart', unmuteVideo);
-                document.removeEventListener('scroll', unmuteVideo);
-                document.removeEventListener('mousemove', unmuteVideo);
-            }
-        }
-        
-        // Add muted indicator
-        const videoContainer = heroVideo.closest('.hero-video-container');
-        if (videoContainer) {
-            videoContainer.classList.add('muted');
-        }
-        
-        // Add event listeners for user interaction
-        document.addEventListener('click', unmuteVideo);
-        document.addEventListener('keydown', unmuteVideo);
-        document.addEventListener('touchstart', unmuteVideo);
-        document.addEventListener('scroll', unmuteVideo);
-        document.addEventListener('mousemove', unmuteVideo);
-        
-        // Initial volume update
-        updateVideoVolume();
-        
-        // Ensure video plays on page load
-        heroVideo.addEventListener('loadedmetadata', function() {
-            this.play().catch(function(error) {
-                console.log('Autoplay failed:', error);
             });
-        });
+            
+            // Unmute video on first user interaction
+            function unmuteVideo() {
+                if (isMuted && player) {
+                    player.unMute();
+                    isMuted = false;
+                    
+                    // Remove event listeners after unmuting
+                    document.removeEventListener('click', unmuteVideo);
+                    document.removeEventListener('keydown', unmuteVideo);
+                    document.removeEventListener('touchstart', unmuteVideo);
+                    document.removeEventListener('scroll', unmuteVideo);
+                    document.removeEventListener('mousemove', unmuteVideo);
+                }
+            }
+            
+            // Add event listeners for user interaction
+            document.addEventListener('click', unmuteVideo);
+            document.addEventListener('keydown', unmuteVideo);
+            document.addEventListener('touchstart', unmuteVideo);
+            document.addEventListener('scroll', unmuteVideo);
+            document.addEventListener('mousemove', unmuteVideo);
+            
+            // Initial volume update
+            updateVideoVolume();
+        }
+        
+        // Initialize YouTube player
+        initYouTubePlayer();
     }
 }
 
