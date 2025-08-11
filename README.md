@@ -1,152 +1,105 @@
-# Mr. Beezy - Motivational Speaker Website
+# Mr Beezy Website Content Management
 
-A modern, professional website for Mr. Beezy, featuring a powerful red and black theme that matches his energetic motivational speaking style.
+This website now connects to your existing portal system at portal.mediacwc.com to make all text editable.
 
-## 🚀 Features
+## 🚀 How It Works
 
-- **Modern Design**: Clean, professional layout with red and black theme
-- **Fully Responsive**: Optimized for all devices (desktop, tablet, mobile)
-- **Custom CSS**: No frameworks, pure CSS with modern techniques
-- **Interactive Elements**: Smooth animations, hover effects, and transitions
-- **Contact Form**: Functional booking form with validation
-- **SEO Optimized**: Proper meta tags and semantic HTML
-- **Performance Optimized**: Fast loading with optimized assets
-- **Accessibility**: WCAG compliant design
+1. **Client logs into portal.mediacwc.com** (your existing system)
+2. **Edits content** through your portal interface
+3. **Content saves to Supabase** database
+4. **This website fetches** using the client's unique API key
+5. **Text updates automatically** on the website
 
-## 🎨 Design Highlights
+## 🔑 Setting Up the API Key
 
-- **Hero Section**: Bold typography with animated elements
-- **Service Cards**: Interactive cards showcasing speaking services
-- **Testimonials**: Social proof with elegant styling
-- **Contact Form**: Professional booking form with validation
-- **Mobile Navigation**: Hamburger menu for mobile devices
-- **Scroll Animations**: Smooth reveal animations on scroll
+### Method 1: Browser Console (for testing)
+1. Open the website
+2. Press F12 to open developer tools
+3. Go to Console tab
+4. Type: `setApiKey("mcwc_YOUR_ACTUAL_API_KEY")`
+5. Press Enter
 
-## 📁 Project Structure
+### Method 2: Programmatically
+```javascript
+// Set API key
+window.contentManager.setApiKey("mcwc_YOUR_ACTUAL_API_KEY");
 
-```
-survey/
-├── index.html          # Main HTML file
-├── styles.css          # Custom CSS styles
-├── script.js           # JavaScript functionality
-├── README.md           # Project documentation
-└── favicon.ico         # Website favicon (optional)
+// Check status
+window.contentManager.isUsingApiContent();
+
+// Clear API key
+window.contentManager.clearApiKey();
 ```
 
-## 🛠️ Technologies Used
+## 📝 Editable Content Sections
 
-- **HTML5**: Semantic markup
-- **CSS3**: Custom styles with CSS Grid, Flexbox, and animations
-- **JavaScript**: Vanilla JS for interactivity
-- **Google Fonts**: Inter font family
-- **CSS Variables**: For consistent theming
+- **Hero Section**: Main title, subtitle, description
+- **About Section**: Title, subtitle, paragraphs, statistics, CTA button
+- **Services**: All 5 service cards (title, description, features)
+- **Previous Visits**: Section title, video card titles
+- **Testimonials**: Section title, testimonial titles and subtitles
+- **Contact**: Section title, subtitle, email, phone, form button
+- **Footer**: Tagline, section headers, copyright
+- **Exit Intent Popup**: Title, message, button texts
 
-## 🚀 Deployment Options
+## 🔄 Content Updates
 
-### GitHub Pages
+- **Automatic**: Every 5 minutes when API key is set
+- **Manual**: Call `refreshContent()` from console
+- **Real-time**: Updates immediately when API key is set
 
-1. **Create a new repository** on GitHub
-2. **Upload your files** to the repository
-3. **Go to Settings** → **Pages**
-4. **Select source**: Deploy from a branch
-5. **Choose branch**: `main` or `master`
-6. **Save** and wait for deployment
+## 🛠️ Available Console Functions
 
-Your site will be available at: `https://yourusername.github.io/repository-name`
-
-### Vercel
-
-1. **Install Vercel CLI**:
-   ```bash
-   npm install -g vercel
-   ```
-
-2. **Deploy from your project directory**:
-   ```bash
-   vercel
-   ```
-
-3. **Follow the prompts** to connect your GitHub account
-4. **Your site will be deployed** automatically
-
-### Netlify
-
-1. **Drag and drop** your project folder to [Netlify](https://netlify.com)
-2. **Or connect your GitHub repository** for automatic deployments
-3. **Your site will be live** with a Netlify subdomain
-
-## 🎯 Customization
-
-### Colors
-The color scheme is defined in CSS variables at the top of `styles.css`:
-
-```css
-:root {
-    --primary-red: #dc2626;
-    --primary-red-dark: #b91c1c;
-    --primary-red-light: #ef4444;
-    --black: #000000;
-    --dark-gray: #1f2937;
-    --gray: #6b7280;
-    --light-gray: #f3f4f6;
-    --white: #ffffff;
-}
+```javascript
+setApiKey("your_api_key")     // Set API key to fetch from portal
+clearApiKey()                  // Remove API key (use default content)
+checkStatus()                  // Check current system status
+refreshContent()               // Manually refresh content
 ```
 
-### Content
-- Update the content in `index.html` to match Mr. Beezy's specific information
-- Replace placeholder text with actual testimonials, services, and contact details
-- Add real images by replacing the placeholder divs
+## 🔒 Security
 
-### Contact Form
-The contact form is currently set up for demonstration. To make it functional:
+- Each client has a unique API key (format: `mcwc_` + 32 characters)
+- Keys are domain-bound and origin-validated
+- No shared secrets between clients
+- API keys stored in localStorage (client-side)
 
-1. **Add a form handling service** (Formspree, Netlify Forms, etc.)
-2. **Update the form action** in the HTML
-3. **Configure email notifications**
+## 📡 API Endpoint
 
-## 📱 Browser Support
+Your portal must provide:
+```
+GET https://portal.mediacwc.com/api/website-content/{domain}
+Headers: x-api-key: {client_api_key}
+```
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers
+## 🚨 Troubleshooting
 
-## 🔧 Performance Features
+### Content Not Updating?
+1. Check if API key is set: `checkStatus()`
+2. Verify API key format (must start with `mcwc_`)
+3. Check browser console for errors
+4. Ensure your portal API is working
 
-- **Optimized CSS**: Minimal and efficient styles
-- **Lazy Loading**: Ready for image optimization
-- **Smooth Scrolling**: Native CSS scroll behavior
-- **Intersection Observer**: Efficient scroll animations
-- **Debounced Events**: Performance-optimized event handling
+### API Connection Failed?
+1. Verify API key is correct
+2. Check domain matches your portal configuration
+3. Ensure website is active in portal system
+4. Check CORS settings on your portal
 
-## 🎨 Design System
+## 📱 Testing
 
-### Typography
-- **Primary Font**: Inter (Google Fonts)
-- **Headings**: Bold weights (700-900)
-- **Body Text**: Regular weight (400)
-- **Responsive Sizing**: Using `clamp()` for fluid typography
+1. **Set API key**: `setApiKey("mcwc_YOUR_KEY")`
+2. **Check status**: `checkStatus()`
+3. **Refresh content**: `refreshContent()`
+4. **Clear API key**: `clearApiKey()`
 
-### Spacing
-- **Consistent padding**: 80px for sections
-- **Grid gaps**: 2rem for cards, 4rem for sections
-- **Responsive margins**: Adapts to screen size
+## 🎯 Next Steps
 
-### Animations
-- **Hover Effects**: Subtle transforms and color changes
-- **Scroll Animations**: Fade-in effects on scroll
-- **Loading States**: Smooth transitions and spinners
-
-## 📞 Support
-
-For questions or customization requests, please contact the development team.
-
-## 📄 License
-
-This project is created for Mr. Beezy's use. All rights reserved.
+1. **Get API key** from your portal admin panel
+2. **Set API key** using console commands above
+3. **Edit content** through portal.mediacwc.com
+4. **See updates** automatically on this website
 
 ---
 
-**Built with ❤️ for Mr. Beezy's motivational speaking business** 
+**Note**: This system works with your existing portal infrastructure. No additional admin panel needed on this website. 
