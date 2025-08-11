@@ -1,0 +1,21 @@
+{
+  "name": "mr-beezy-website",
+  "version": "1.0.0",
+  "description": "Mr Beezy - Motivational Speaker & Life Coach Website",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site - no build step required'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "motivational-speaker",
+    "life-coach",
+    "static-site"
+  ],
+  "author": "CWCMEDIA",
+  "license": "MIT",
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  }
+}
