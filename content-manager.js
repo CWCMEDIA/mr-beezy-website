@@ -53,9 +53,9 @@ class ContentManager {
             
             // About Section
             'about-title': '#about .section-title',
-            'about-subtitle': '#about .about-content h3',
-            'about-paragraph1': '#about .about-content p:first-of-type',
-            'about-paragraph2': '#about .about-content p:nth-of-type(2)',
+            'about-subtitle': '#about .about-text h3',
+            'about-paragraph1': '#about .about-text p:first-of-type',
+            'about-paragraph2': '#about .about-text p:nth-of-type(2)',
             'about-stats-people': '#about .stats .stat:nth-child(1) .stat-number',
             'about-stats-institutions': '#about .stats .stat:nth-child(2) .stat-number',
             'about-stats-years': '#about .stats .stat:nth-child(3) .stat-number',
@@ -126,6 +126,8 @@ class ContentManager {
                     this.makeElementEditable(element, key, text);
                     console.log(`✅ Mapped: ${key} = "${text}"`);
                 }
+            } else {
+                console.warn(`⚠️ Element not found for selector: ${selector} (key: ${key})`);
             }
         });
 
@@ -278,6 +280,25 @@ class ContentManager {
         return content;
     }
 
+    // Method to test content mapping
+    testContentMapping() {
+        console.log('🧪 Testing Content Mapping...');
+        console.log('Current domain:', this.domain);
+        console.log('API Key:', this.apiKey);
+        
+        const mappedElements = document.querySelectorAll('[data-content-key]');
+        console.log(`Found ${mappedElements.length} mapped elements:`);
+        
+        mappedElements.forEach((el, index) => {
+            const key = el.getAttribute('data-content-key');
+            const text = el.textContent.trim();
+            const original = el.getAttribute('data-content-original');
+            console.log(`${index + 1}. ${key}: "${text}" (original: "${original}")`);
+        });
+        
+        return mappedElements.length;
+    }
+
     // Get current content
     getContent() {
         return this.exportCurrentContent();
@@ -292,6 +313,17 @@ class ContentManager {
 // Initialize content manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     window.contentManager = new ContentManager();
+    
+    // Add test function to window for debugging
+    window.testContentMapping = function() {
+        if (window.contentManager) {
+            return window.contentManager.testContentMapping();
+        } else {
+            console.error('Content manager not initialized yet.');
+        }
+    };
+    
+    console.log('🔧 Debug function available: testContentMapping()');
 });
 
 // Export for use in other scripts
