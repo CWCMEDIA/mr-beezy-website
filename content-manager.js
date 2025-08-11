@@ -31,55 +31,38 @@ class ContentManager {
     }
 
     makeAllTextEditable() {
-        console.log('🔍 Scanning website for real content...');
-        
-        // Make all text elements editable by scanning the actual page
-        this.scanAndMakeEditable();
-        
-        console.log('✅ All real text on website is now editable through portal.mediacwc.com');
-    }
-
-    scanAndMakeEditable() {
-        // Get all text-containing elements
-        const textElements = this.getAllTextElements();
+        console.log('🔍 Mapping Mr Beezy website content...');
         
         // Map specific sections to portal-expected keys
         this.mapSpecificSections();
         
-        // Make remaining elements editable with generic keys
-        textElements.forEach((element, index) => {
-            const text = element.textContent.trim();
-            if (text && text.length > 0 && !element.hasAttribute('data-content-key')) {
-                // Create a unique key based on content and position
-                const key = this.generateContentKey(element, text, index);
-                
-                // Make this element editable
-                this.makeElementEditable(element, key, text);
-            }
-        });
+        console.log('✅ All Mr Beezy content is now editable through portal.mediacwc.com');
     }
 
     mapSpecificSections() {
         // Map specific sections to the format your portal expects
         const sectionMappings = {
             // Hero Section
-            'hero-title': '.hero-title-main, .hero-title-sub',
-            'hero-subtitle': '.hero-title-sub',
+            'hero-title': '.hero-title-main',
+            'hero-subtitle': '.hero-title-sub', 
             'hero-description': '.hero-description',
-            'hero-cta': '.hero-buttons .btn, .hero-cta-button',
+            'hero-cta': '.hero-buttons .btn',
+            
+            // Brand Section
+            'brand-strapline-title': '.brand-strapline-title',
             
             // About Section
-            'about-title': '#about .section-title, .about-title',
-            'about-subtitle': '#about .about-text h3, .about-subtitle',
-            'about-paragraph1': '#about .about-text p:first-of-type',
-            'about-paragraph2': '#about .about-text p:nth-of-type(2)',
-            'about-stats-people': '#about .stat:nth-child(1) .stat-number',
-            'about-stats-institutions': '#about .stat:nth-child(2) .stat-number',
-            'about-stats-years': '#about .stat:nth-child(3) .stat-number',
-            'about-cta': '#about .about-cta-button .btn, .about-cta',
+            'about-title': '#about .section-title',
+            'about-subtitle': '#about .about-content h3',
+            'about-paragraph1': '#about .about-content p:first-of-type',
+            'about-paragraph2': '#about .about-content p:nth-of-type(2)',
+            'about-stats-people': '#about .stats .stat:nth-child(1) .stat-number',
+            'about-stats-institutions': '#about .stats .stat:nth-child(2) .stat-number',
+            'about-stats-years': '#about .stats .stat:nth-child(3) .stat-number',
+            'about-cta': '#about .about-cta .btn',
             
             // Services Section
-            'services-title': '#services .section-title, .services-title',
+            'services-title': '#services .section-title',
             'service-corporate-title': '.service-card:nth-child(1) h3',
             'service-corporate-description': '.service-card:nth-child(1) p',
             'service-education-title': '.service-card:nth-child(2) h3',
@@ -100,116 +83,120 @@ class ContentManager {
             
             // Testimonials
             'testimonials-title': '#testimonials .section-title',
-            'testimonial-corporate-title': '.testimonial-card:nth-child(1) .author-info h4',
-            'testimonial-corporate-subtitle': '.testimonial-card:nth-child(1) .author-info span',
-            'testimonial-education-title': '.testimonial-card:nth-child(2) .author-info h4',
-            'testimonial-education-subtitle': '.testimonial-card:nth-child(2) .author-info span',
-            'testimonial-sports-title': '.testimonial-card:nth-child(3) .author-info h4',
-            'testimonial-sports-subtitle': '.testimonial-card:nth-child(3) .author-info span',
+            'testimonial-corporate-title': '.testimonial-card:nth-child(1) .testimonial-title',
+            'testimonial-corporate-text': '.testimonial-card:nth-child(1) .testimonial-text',
+            'testimonial-corporate-author': '.testimonial-card:nth-child(1) .author-name',
+            'testimonial-corporate-title-role': '.testimonial-card:nth-child(1) .author-title',
+            'testimonial-education-title': '.testimonial-card:nth-child(2) .testimonial-title',
+            'testimonial-education-text': '.testimonial-card:nth-child(2) .testimonial-text',
+            'testimonial-education-author': '.testimonial-card:nth-child(2) .author-name',
+            'testimonial-education-title-role': '.testimonial-card:nth-child(2) .author-title',
+            'testimonial-sports-title': '.testimonial-card:nth-child(3) .testimonial-title',
+            'testimonial-sports-text': '.testimonial-card:nth-child(3) .testimonial-text',
+            'testimonial-sports-author': '.testimonial-card:nth-child(3) .author-name',
+            'testimonial-sports-title-role': '.testimonial-card:nth-child(3) .author-title',
             
             // Contact Section
-            'contact-title': '#contact .section-title, .contact-title',
-            'contact-subtitle': '#contact .section-subtitle, .contact-subtitle',
-            'contact-email': '#contact .contact-item:nth-child(1) p, .contact-email',
-            'contact-phone': '#contact .contact-item:nth-child(2) p, .contact-phone',
-            'contact-form-button': '#contact #booking-form button, .contact-form-button',
+            'contact-title': '#contact .section-title',
+            'contact-subtitle': '#contact .contact-subtitle',
+            'contact-email': '#contact .contact-email',
+            'contact-phone': '#contact .contact-phone',
+            'contact-address': '#contact .contact-address',
+            'contact-form-title': '#contact .contact-form h3',
+            'contact-form-subtitle': '#contact .contact-form p',
+            'contact-form-name-label': '#contact .form-group:nth-child(1) label',
+            'contact-form-email-label': '#contact .form-group:nth-child(2) label',
+            'contact-form-message-label': '#contact .form-group:nth-child(3) label',
+            'contact-form-submit': '#contact .contact-form .btn',
             
             // Footer
-            'footer-tagline': '.footer-section:nth-child(1) p, .footer-tagline',
-            'footer-quick-links': '.footer-section:nth-child(2) h4, .footer-quick-links',
-            'footer-services': '.footer-section:nth-child(3) h4, .footer-services',
-            'footer-connect': '.footer-section:nth-child(4) h4, .footer-connect',
-            'footer-copyright': '.footer-bottom p, .footer-copyright',
-            
-            // Exit Intent Popup
-            'exit-intent-title': '#exitIntentPopup .exit-popup-title',
-            'exit-intent-message': '#exitIntentPopup .exit-popup-message',
-            'exit-intent-primary-button': '#exitIntentPopup .transform-btn',
-            'exit-intent-secondary-button': '#exitIntentPopup .stay-btn',
-            
-            // Brand Section
-            'brand-strapline-title': '.brand-strapline-title'
+            'footer-copyright': '.footer .copyright',
+            'footer-powered-by': '.footer .powered-by'
         };
-        
-        // Apply the mappings
+
+        // Apply mappings to existing elements
         Object.keys(sectionMappings).forEach(key => {
             const selector = sectionMappings[key];
             const element = document.querySelector(selector);
+            
             if (element) {
                 const text = element.textContent.trim();
-                if (text) {
+                if (text && text.length > 0) {
+                    // Make this element editable with the specific key
+                    this.makeElementEditable(element, key, text);
+                    console.log(`✅ Mapped: ${key} = "${text}"`);
+                }
+            }
+        });
+
+        // Also scan for any other text elements that might not be mapped
+        this.scanRemainingElements();
+    }
+
+    scanRemainingElements() {
+        // Get all text-containing elements that don't have data-content-key
+        const textElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a, button, label');
+        
+        textElements.forEach((element, index) => {
+            if (!element.hasAttribute('data-content-key') && element.textContent.trim()) {
+                const text = element.textContent.trim();
+                if (text && text.length > 0 && text !== '\n' && text !== ' ') {
+                    // Create a unique key based on content and position
+                    const key = this.generateContentKey(element, text, index);
+                    
+                    // Make this element editable
                     this.makeElementEditable(element, key, text);
                 }
             }
         });
     }
 
-    getAllTextElements() {
-        // Get all elements that contain text
-        const selectors = [
-            'h1', 'h2', 'h3', 'h4', 'h5', 'h6', // Headings
-            'p', 'span', 'div', 'a', 'button', 'label', // Text elements
-            'li', 'td', 'th' // List and table elements
-        ];
-        
-        let elements = [];
-        selectors.forEach(selector => {
-            const found = document.querySelectorAll(selector);
-            elements = elements.concat(Array.from(found));
-        });
-        
-        // Filter out elements that are children of already selected elements
-        elements = elements.filter(element => {
-            return !elements.some(other => 
-                other !== element && other.contains(element)
-            );
-        });
-        
-        return elements;
-    }
-
     generateContentKey(element, text, index) {
-        // Create a meaningful key based on the element and content
-        let key = '';
+        // Try to create a meaningful key from the text
+        let key = this.createKeyFromText(text);
         
-        // Try to get a meaningful identifier
-        if (element.id) {
-            key = element.id;
-        } else if (element.className) {
-            const classes = element.className.split(' ').filter(c => c.length > 0);
-            if (classes.length > 0) {
-                key = classes[0];
-            }
+        // If the key is too generic, add element type and position
+        if (key.length < 3 || key === 'text') {
+            const tagName = element.tagName.toLowerCase();
+            const className = element.className ? element.className.split(' ')[0] : '';
+            key = `${tagName}-${className || 'item'}-${index}`;
         }
-        
-        // If no good identifier, create one from content
-        if (!key || key.length < 3) {
-            key = this.createKeyFromText(text);
-        }
-        
-        // Add index to ensure uniqueness
-        key = `${key}-${index}`;
         
         return key;
     }
 
     createKeyFromText(text) {
-        // Create a key from the text content
+        // Convert text to a key format
         return text
             .toLowerCase()
-            .replace(/[^a-z0-9]/g, '')
-            .substring(0, 20);
+            .replace(/[^a-z0-9\s]/g, '')
+            .replace(/\s+/g, '-')
+            .substring(0, 30);
     }
 
     makeElementEditable(element, key, originalText) {
-        // Add data attributes for content management
-        element.setAttribute('data-content-key', key);
+        // Store original text
         element.setAttribute('data-content-original', originalText);
-        element.setAttribute('data-content-editable', 'true');
         
-        // Store the element reference
-        if (!this.contentElements) this.contentElements = {};
-        this.contentElements[key] = element;
+        // Add content key for portal identification
+        element.setAttribute('data-content-key', key);
+        
+        // Add visual indicator for editable content
+        element.style.cursor = 'pointer';
+        element.title = `Editable content (${key})`;
+        
+        // Add hover effect
+        element.addEventListener('mouseenter', () => {
+            element.style.backgroundColor = 'rgba(220, 38, 38, 0.1)';
+            element.style.borderRadius = '4px';
+            element.style.padding = '2px 4px';
+        });
+        
+        element.addEventListener('mouseleave', () => {
+            element.style.backgroundColor = '';
+            element.style.borderRadius = '';
+            element.style.padding = '';
+        });
     }
 
     async fetchCustomContent() {
