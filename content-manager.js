@@ -33,101 +33,88 @@ class ContentManager {
     makeAllTextEditable() {
         console.log('🔍 Mapping Mr Beezy website content...');
         
-        // Map specific sections to portal-expected keys
-        this.mapSpecificSections();
+        // Directly map the specific content elements
+        this.mapSpecificContent();
         
         console.log('✅ All Mr Beezy content is now editable through portal.mediacwc.com');
     }
 
-    mapSpecificSections() {
-        // Map specific sections to the format your portal expects
-        const sectionMappings = {
-            // Hero Section
-            'hero-title': '.hero-title-main',
-            'hero-subtitle': '.hero-title-sub', 
-            'hero-description': '.hero-description',
-            'hero-cta': '.hero-buttons .btn',
+    mapSpecificContent() {
+        // Direct mapping to actual content elements on the page
+        const contentMap = [
+            // Hero Section - These are the ACTUAL elements on your page
+            { key: 'hero-title', selector: '.hero-title-main', expectedText: 'MOTIVATIONAL SPEAKER' },
+            { key: 'hero-subtitle', selector: '.hero-title-sub', expectedText: 'MR BEEZY' },
+            { key: 'hero-description', selector: '.hero-description', expectedText: 'BECOME THE MOST SUCCESSFUL VERSION OF YOURSELF WITH MR BEEZY' },
+            { key: 'hero-cta', selector: '.hero-buttons .btn', expectedText: 'BOOK MR BEEZY' },
             
             // Brand Section
-            'brand-strapline-title': '.brand-strapline-title',
+            { key: 'brand-strapline-title', selector: '.brand-strapline-title', expectedText: 'Trusted by Leading Brands' },
             
             // About Section
-            'about-title': '#about .section-title',
-            'about-subtitle': '#about .about-text h3',
-            'about-paragraph1': '#about .about-text p:first-of-type',
-            'about-paragraph2': '#about .about-text p:nth-of-type(2)',
-            'about-stats-people': '#about .stats .stat:nth-child(1) .stat-number',
-            'about-stats-institutions': '#about .stats .stat:nth-child(2) .stat-number',
-            'about-stats-years': '#about .stats .stat:nth-child(3) .stat-number',
-            'about-cta': '#about .about-cta .btn',
+            { key: 'about-title', selector: '#about .section-title', expectedText: 'About Mr Beezy' },
+            { key: 'about-subtitle', selector: '#about .about-text h3', expectedText: 'Meet Mr Beezy' },
+            { key: 'about-paragraph1', selector: '#about .about-text p:first-of-type', expectedText: 'Mr Beezy is an award winning motivational speaker, leadership coach and founder of Mr Beezy Ltd, with over 14 years of experience empowering individuals and organisations to unlock peak performance. Having delivered keynote sessions and training to over 100,000 people across more than 500 educational institutions and corporate settings, he brings a unique ability to inspire, engage and drive real change.' },
+            { key: 'about-paragraph2', selector: '#about .about-text p:nth-of-type(2)', expectedText: 'From Fortune 500 companies to leading UK schools and universities, Mr Beezy is trusted by senior leaders, educators and executives for his powerful blend of storytelling, strategy and mindset transformation. His philosophy "No Grind, No Glory" champions discipline, resilience and accountability as the foundations of long term success.' },
             
             // Services Section
-            'services-title': '#services .section-title',
-            'service-corporate-title': '.service-card:nth-child(1) h3',
-            'service-corporate-description': '.service-card:nth-child(1) p',
-            'service-education-title': '.service-card:nth-child(2) h3',
-            'service-education-description': '.service-card:nth-child(2) p',
-            'service-sports-title': '.service-card:nth-child(3) h3',
-            'service-sports-description': '.service-card:nth-child(3) p',
-            'service-personal-title': '.service-card:nth-child(4) h3',
-            'service-personal-description': '.service-card:nth-child(4) p',
-            'service-portal-title': '.service-card:nth-child(5) h3',
-            'service-portal-description': '.service-card:nth-child(5) p',
-            'service-portal-cta': '.service-card:nth-child(5) .btn',
+            { key: 'services-title', selector: '#services .section-title', expectedText: 'Speaking Services' },
+            
+            // Corporate service
+            { key: 'service-corporate-title', selector: '.service-card:nth-child(1) h3', expectedText: 'Corporate' },
+            { key: 'service-corporate-description', selector: '.service-card:nth-child(1) p', expectedText: 'Energize your team with powerful motivation and leadership insights that drive results and boost morale.' },
+            
+            // Education service
+            { key: 'service-education-title', selector: '.service-card:nth-child(2) h3', expectedText: 'Education' },
+            { key: 'service-education-description', selector: '.service-card:nth-child(2) p', expectedText: 'Inspire students and educators with messages of perseverance, goal-setting, and personal excellence.' },
+            
+            // Sports service
+            { key: 'service-sports-title', selector: '.service-card:nth-child(3) h3', expectedText: 'Sports' },
+            { key: 'service-sports-description', selector: '.service-card:nth-child(3) p', expectedText: 'Unlock peak performance with mental toughness training and athletic motivation strategies.' },
+            
+            // Personal Development service
+            { key: 'service-personal-title', selector: '.service-card:nth-child(4) h3', expectedText: 'Personal Development' },
+            { key: 'service-personal-description', selector: '.service-card:nth-child(4) p', expectedText: 'Transform individual lives through one-on-one coaching and small group sessions.' },
+            
+            // Portal service
+            { key: 'service-portal-title', selector: '.service-card:nth-child(5) h3', expectedText: 'Motivation Portal' },
+            { key: 'service-portal-description', selector: '.service-card:nth-child(5) p', expectedText: 'Access specialized motivation content and resources tailored to your specific needs and goals.' },
             
             // Previous Visits
-            'previous-visits-title': '.mr-beezy-action .section-title',
-            'previous-visits-education': '.action-videos .video-card:nth-child(1) h3',
-            'previous-visits-corporate': '.action-videos .video-card:nth-child(2) h3',
-            'previous-visits-sports': '.action-videos .video-card:nth-child(3) h3',
+            { key: 'previous-visits-title', selector: '.mr-beezy-action .section-title', expectedText: 'Previous Visits' },
+            { key: 'previous-visits-education', selector: '.action-videos .video-card:nth-child(1) h3', expectedText: 'Education' },
+            { key: 'previous-visits-corporate', selector: '.action-videos .video-card:nth-child(2) h3', expectedText: 'Corporate' },
+            { key: 'previous-visits-sports', selector: '.action-videos .video-card:nth-child(3) h3', expectedText: 'Sports' },
             
             // Testimonials
-            'testimonials-title': '#testimonials .section-title',
-            'testimonial-corporate-title': '.testimonial-card:nth-child(1) .testimonial-title',
-            'testimonial-corporate-text': '.testimonial-card:nth-child(1) .testimonial-text',
-            'testimonial-corporate-author': '.testimonial-card:nth-child(1) .author-name',
-            'testimonial-corporate-title-role': '.testimonial-card:nth-child(1) .author-title',
-            'testimonial-education-title': '.testimonial-card:nth-child(2) .testimonial-title',
-            'testimonial-education-text': '.testimonial-card:nth-child(2) .testimonial-text',
-            'testimonial-education-author': '.testimonial-card:nth-child(2) .author-name',
-            'testimonial-education-title-role': '.testimonial-card:nth-child(2) .author-title',
-            'testimonial-sports-title': '.testimonial-card:nth-child(3) .testimonial-title',
-            'testimonial-sports-text': '.testimonial-card:nth-child(3) .testimonial-text',
-            'testimonial-sports-author': '.testimonial-card:nth-child(3) .author-name',
-            'testimonial-sports-title-role': '.testimonial-card:nth-child(3) .author-title',
+            { key: 'testimonials-title', selector: '#testimonials .section-title', expectedText: 'What Clients Say' },
             
             // Contact Section
-            'contact-title': '#contact .section-title',
-            'contact-subtitle': '#contact .contact-subtitle',
-            'contact-email': '#contact .contact-email',
-            'contact-phone': '#contact .contact-phone',
-            'contact-address': '#contact .contact-address',
-            'contact-form-title': '#contact .contact-form h3',
-            'contact-form-subtitle': '#contact .contact-form p',
-            'contact-form-name-label': '#contact .form-group:nth-child(1) label',
-            'contact-form-email-label': '#contact .form-group:nth-child(2) label',
-            'contact-form-message-label': '#contact .form-group:nth-child(3) label',
-            'contact-form-submit': '#contact .contact-form .btn',
+            { key: 'contact-title', selector: '#contact .section-title', expectedText: 'Contact Mr Beezy' },
+            { key: 'contact-subtitle', selector: '#contact .contact-subtitle', expectedText: 'Get in touch to book your next event' },
             
             // Footer
-            'footer-copyright': '.footer .copyright',
-            'footer-powered-by': '.footer .powered-by'
-        };
+            { key: 'footer-copyright', selector: '.footer .copyright', expectedText: '© 2024 Mr Beezy Ltd. All rights reserved.' }
+        ];
 
-        // Apply mappings to existing elements
-        Object.keys(sectionMappings).forEach(key => {
-            const selector = sectionMappings[key];
-            const element = document.querySelector(selector);
+        // Apply the mappings
+        contentMap.forEach(item => {
+            const element = document.querySelector(item.selector);
             
             if (element) {
-                const text = element.textContent.trim();
-                if (text && text.length > 0) {
+                const actualText = element.textContent.trim();
+                if (actualText && actualText.length > 0) {
                     // Make this element editable with the specific key
-                    this.makeElementEditable(element, key, text);
-                    console.log(`✅ Mapped: ${key} = "${text}"`);
+                    this.makeElementEditable(element, item.key, actualText);
+                    console.log(`✅ Mapped: ${item.key} = "${actualText}"`);
+                    
+                    // Check if this matches expected text
+                    if (item.expectedText && actualText !== item.expectedText) {
+                        console.warn(`⚠️ Text mismatch for ${item.key}: Expected "${item.expectedText}", got "${actualText}"`);
+                    }
                 }
             } else {
-                console.warn(`⚠️ Element not found for selector: ${selector} (key: ${key})`);
+                console.warn(`⚠️ Element not found for selector: ${item.selector} (key: ${item.key})`);
             }
         });
 
