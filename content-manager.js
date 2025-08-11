@@ -13,11 +13,16 @@ class ContentManager {
         // Store API key for persistence
         localStorage.setItem('mr_beezy_api_key', this.apiKey);
         
-        // Make all text editable immediately
-        this.makeAllTextEditable();
-        
-        // Try to fetch any custom content from portal
-        await this.fetchCustomContent();
+        // Wait for DOM to be fully loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.makeAllTextEditable();
+                this.fetchCustomContent();
+            });
+        } else {
+            this.makeAllTextEditable();
+            this.fetchCustomContent();
+        }
         
         // Set up periodic content refresh (every 5 minutes)
         setInterval(() => {
@@ -26,141 +31,96 @@ class ContentManager {
     }
 
     makeAllTextEditable() {
-        // Make all text elements editable with data attributes
-        this.makeSectionEditable('hero-title-main', 'MOTIVATIONAL SPEAKER');
-        this.makeSectionEditable('hero-title-sub', 'MR BEEZY');
-        this.makeSectionEditable('hero-description', 'BECOME THE MOST SUCCESSFUL VERSION OF YOURSELF WITH MR BEEZY');
-        this.makeSectionEditable('hero-cta-button', 'BOOK MR BEEZY');
+        console.log('🔍 Scanning website for real content...');
         
-        this.makeSectionEditable('brand-strapline-title', 'Trusted by Leading Brands');
+        // Make all text elements editable by scanning the actual page
+        this.scanAndMakeEditable();
         
-        this.makeSectionEditable('about-title', 'About Mr Beezy');
-        this.makeSectionEditable('about-subtitle', 'Meet Mr Beezy');
-        this.makeSectionEditable('about-paragraph1', 'Mr Beezy is an award winning motivational speaker, leadership coach and founder of Mr Beezy Ltd, with over 14 years of experience empowering individuals and organisations to unlock peak performance. Having delivered keynote sessions and training to over 100,000 people across more than 500 educational institutions and corporate settings, he brings a unique ability to inspire, engage and drive real change.');
-        this.makeSectionEditable('about-paragraph2', 'From Fortune 500 companies to leading UK schools and universities, Mr Beezy is trusted by senior leaders, educators and executives for his powerful blend of storytelling, strategy and mindset transformation. His philosophy "No Grind, No Glory" champions discipline, resilience and accountability as the foundations of long term success.');
-        this.makeSectionEditable('about-stats-people', '100,000+');
-        this.makeSectionEditable('about-stats-institutions', '500+');
-        this.makeSectionEditable('about-stats-years', '14+');
-        this.makeSectionEditable('about-cta', 'Find Out More Here');
-        
-        this.makeSectionEditable('services-title', 'Speaking Services');
-        
-        // Corporate service
-        this.makeSectionEditable('service-corporate-title', 'Corporate');
-        this.makeSectionEditable('service-corporate-description', 'Energize your team with powerful motivation and leadership insights that drive results and boost morale.');
-        this.makeSectionEditable('service-corporate-feature1', 'Keynote talks');
-        this.makeSectionEditable('service-corporate-feature2', 'Panel talks');
-        this.makeSectionEditable('service-corporate-feature3', 'Team Training');
-        this.makeSectionEditable('service-corporate-feature4', 'Workshops');
-        this.makeSectionEditable('service-corporate-feature5', 'Courses');
-        
-        // Education service
-        this.makeSectionEditable('service-education-title', 'Education');
-        this.makeSectionEditable('service-education-description', 'Inspire students and educators with messages of perseverance, goal-setting, and personal excellence.');
-        this.makeSectionEditable('service-education-feature1', 'Motivational assemblies');
-        this.makeSectionEditable('service-education-feature2', 'Half day workshops');
-        this.makeSectionEditable('service-education-feature3', 'Full day workshops');
-        this.makeSectionEditable('service-education-feature4', 'Student Mentorship Programme');
-        this.makeSectionEditable('service-education-feature5', 'Staff CPD Training');
-        this.makeSectionEditable('service-education-feature6', 'Parents evening talks');
-        
-        // Sports service
-        this.makeSectionEditable('service-sports-title', 'Sports');
-        this.makeSectionEditable('service-sports-description', 'Unlock peak performance with mental toughness training and athletic motivation strategies.');
-        this.makeSectionEditable('service-sports-feature1', 'Keynote talks');
-        this.makeSectionEditable('service-sports-feature2', 'Mentorship programme');
-        this.makeSectionEditable('service-sports-feature3', 'Personal development');
-        this.makeSectionEditable('service-sports-feature4', 'Mindset coaching');
-        this.makeSectionEditable('service-sports-feature5', 'Workshops');
-        
-        // Personal Development service
-        this.makeSectionEditable('service-personal-title', 'Personal Development');
-        this.makeSectionEditable('service-personal-description', 'Transform individual lives through one-on-one coaching and small group sessions.');
-        this.makeSectionEditable('service-personal-feature1', 'Public speaking coaching');
-        this.makeSectionEditable('service-personal-feature2', 'Business coaching');
-        this.makeSectionEditable('service-personal-feature3', 'Accountability programme');
-        this.makeSectionEditable('service-personal-feature4', 'Mentorship programme');
-        this.makeSectionEditable('service-personal-feature5', 'Personal brand development');
-        
-        // Portal service
-        this.makeSectionEditable('service-portal-title', 'Motivation Portal');
-        this.makeSectionEditable('service-portal-description', 'Access specialized motivation content and resources tailored to your specific needs and goals.');
-        this.makeSectionEditable('service-portal-feature1', 'Education Motivation');
-        this.makeSectionEditable('service-portal-feature2', 'Business Motivation');
-        this.makeSectionEditable('service-portal-feature3', 'Sports Motivation');
-        this.makeSectionEditable('service-portal-feature4', 'Customized Resources');
-        this.makeSectionEditable('service-portal-cta', 'Enter Portal');
-        
-        this.makeSectionEditable('previous-visits-title', 'Previous Visits');
-        this.makeSectionEditable('previous-visits-education', 'Education');
-        this.makeSectionEditable('previous-visits-corporate', 'Corporate');
-        this.makeSectionEditable('previous-visits-sports', 'Sports');
-        
-        this.makeSectionEditable('testimonials-title', 'What Clients Say');
-        this.makeSectionEditable('testimonial-corporate-title', 'Corporate Testimonial');
-        this.makeSectionEditable('testimonial-corporate-subtitle', 'Real Impact, Real Results');
-        this.makeSectionEditable('testimonial-education-title', 'Education Testimonial');
-        this.makeSectionEditable('testimonial-education-subtitle', 'Inspiring the Next Generation');
-        
-        this.makeSectionEditable('contact-title', 'Get In Touch');
-        this.makeSectionEditable('contact-subtitle', 'Ready to transform your next event? Let\'s discuss how Mr Beezy can inspire and motivate your audience.');
-        this.makeSectionEditable('contact-email', 'info@mrbeezy.com');
-        this.makeSectionEditable('contact-phone', '+442034880518');
-        this.makeSectionEditable('contact-form-button', 'Send Booking Request');
-        
-        this.makeSectionEditable('footer-tagline', 'Transforming lives through powerful motivation and authentic leadership.');
-        this.makeSectionEditable('footer-quick-links', 'Quick Links');
-        this.makeSectionEditable('footer-services', 'Services');
-        this.makeSectionEditable('footer-connect', 'Connect');
-        this.makeSectionEditable('footer-copyright', '© 2024 Mr Beezy. All rights reserved.');
-        
-        this.makeSectionEditable('exit-intent-title', 'Before You Go – Let\'s Make Your Next Event Unforgettable');
-        this.makeSectionEditable('exit-intent-message', 'Whether it\'s inspiring students in schools or empowering teams in corporate settings, I deliver high energy, results driven keynotes and workshops that motivate, educate and transform mindsets. Let\'s talk about making your next event a game changer.');
-        this.makeSectionEditable('exit-intent-primary-button', 'Yes! Let\'s Plan an Impactful Event');
-        this.makeSectionEditable('exit-intent-secondary-button', 'No Thanks, I\'ll Pass on the Impact');
-        
-        console.log('✅ All text on website is now editable through portal.mediacwc.com');
+        console.log('✅ All real text on website is now editable through portal.mediacwc.com');
     }
 
-    makeSectionEditable(key, defaultValue) {
-        // Find the element by key or create a data attribute
-        let element = document.querySelector(`[data-content-key="${key}"]`);
+    scanAndMakeEditable() {
+        // Get all text-containing elements
+        const textElements = this.getAllTextElements();
         
-        if (!element) {
-            // Try to find by class or ID that matches the key
-            element = document.querySelector(`.${key}`) || 
-                     document.querySelector(`#${key}`) ||
-                     this.findElementByText(defaultValue);
-        }
-        
-        if (element) {
-            // Add data attribute for easy identification
-            element.setAttribute('data-content-key', key);
-            element.setAttribute('data-content-default', defaultValue);
-            
-            // Store the original text if not already stored
-            if (!element.hasAttribute('data-content-original')) {
-                element.setAttribute('data-content-original', element.textContent);
+        textElements.forEach((element, index) => {
+            const text = element.textContent.trim();
+            if (text && text.length > 0) {
+                // Create a unique key based on content and position
+                const key = this.generateContentKey(element, text, index);
+                
+                // Make this element editable
+                this.makeElementEditable(element, key, text);
             }
-        }
+        });
     }
 
-    findElementByText(text) {
-        // Find element by its text content
-        const walker = document.createTreeWalker(
-            document.body,
-            NodeFilter.SHOW_TEXT,
-            null,
-            false
-        );
+    getAllTextElements() {
+        // Get all elements that contain text
+        const selectors = [
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6', // Headings
+            'p', 'span', 'div', 'a', 'button', 'label', // Text elements
+            'li', 'td', 'th' // List and table elements
+        ];
+        
+        let elements = [];
+        selectors.forEach(selector => {
+            const found = document.querySelectorAll(selector);
+            elements = elements.concat(Array.from(found));
+        });
+        
+        // Filter out elements that are children of already selected elements
+        elements = elements.filter(element => {
+            return !elements.some(other => 
+                other !== element && other.contains(element)
+            );
+        });
+        
+        return elements;
+    }
 
-        let node;
-        while (node = walker.nextNode()) {
-            if (node.textContent.trim() === text.trim()) {
-                return node.parentElement;
+    generateContentKey(element, text, index) {
+        // Create a meaningful key based on the element and content
+        let key = '';
+        
+        // Try to get a meaningful identifier
+        if (element.id) {
+            key = element.id;
+        } else if (element.className) {
+            const classes = element.className.split(' ').filter(c => c.length > 0);
+            if (classes.length > 0) {
+                key = classes[0];
             }
         }
-        return null;
+        
+        // If no good identifier, create one from content
+        if (!key || key.length < 3) {
+            key = this.createKeyFromText(text);
+        }
+        
+        // Add index to ensure uniqueness
+        key = `${key}-${index}`;
+        
+        return key;
+    }
+
+    createKeyFromText(text) {
+        // Create a key from the text content
+        return text
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '')
+            .substring(0, 20);
+    }
+
+    makeElementEditable(element, key, originalText) {
+        // Add data attributes for content management
+        element.setAttribute('data-content-key', key);
+        element.setAttribute('data-content-original', originalText);
+        element.setAttribute('data-content-editable', 'true');
+        
+        // Store the element reference
+        if (!this.contentElements) this.contentElements = {};
+        this.contentElements[key] = element;
     }
 
     async fetchCustomContent() {
@@ -177,11 +137,14 @@ class ContentManager {
                 const data = await response.json();
                 if (data.content) {
                     this.updateWithCustomContent(data.content);
+                    console.log('✅ Content updated from portal');
                 }
+            } else {
+                console.debug('Portal content fetch failed (using original content):', response.status);
             }
         } catch (error) {
-            // Silently fail - website continues to work with default content
-            console.debug('Portal content fetch failed (using default content):', error.message);
+            // Silently fail - website continues to work with original content
+            console.debug('Portal content fetch failed (using original content):', error.message);
         }
     }
 
@@ -222,6 +185,16 @@ class ContentManager {
                 el.textContent = original;
             }
         });
+    }
+
+    // Method to show all editable content
+    showAllEditableContent() {
+        const content = this.exportCurrentContent();
+        console.log('=== All Editable Content on Website ===');
+        Object.keys(content).forEach(key => {
+            console.log(`${key}: "${content[key]}"`);
+        });
+        return content;
     }
 
     // Get current content

@@ -12,6 +12,7 @@ function checkStatus() {
         console.log('🌐 Portal connection:', 'portal.mediacwc.com');
         console.log('📝 Editable text sections:', editableKeys.length);
         console.log('🔄 Auto-refresh:', 'Every 5 minutes');
+        console.log('🎯 Real content detection:', 'Active');
         
         if (editableKeys.length > 0) {
             console.log('📋 Editable sections:', editableKeys.slice(0, 10).join(', '));
@@ -51,6 +52,16 @@ function exportCurrentContent() {
     }
 }
 
+// Function to show all editable content
+function showAllEditableContent() {
+    if (window.contentManager) {
+        const content = window.contentManager.showAllEditableContent();
+        return content;
+    } else {
+        console.error('Content manager not initialized yet.');
+    }
+}
+
 // Function to reset to original content
 function resetToOriginal() {
     if (window.contentManager) {
@@ -75,6 +86,7 @@ function refreshContent() {
 window.checkStatus = checkStatus;
 window.getAllEditableKeys = getAllEditableKeys;
 window.exportCurrentContent = exportCurrentContent;
+window.showAllEditableContent = showAllEditableContent;
 window.resetToOriginal = resetToOriginal;
 window.refreshContent = refreshContent;
 
@@ -86,9 +98,11 @@ console.log('');
 console.log('Available functions:');
 console.log('- checkStatus() - Check current system status');
 console.log('- getAllEditableKeys() - See all editable text sections');
+console.log('- showAllEditableContent() - Display all real content detected');
 console.log('- exportCurrentContent() - Export current text for portal');
 console.log('- resetToOriginal() - Reset all text to original content');
 console.log('- refreshContent() - Manually refresh from portal');
 console.log('');
-console.log('🎯 EVERY PIECE OF TEXT IS NOW EDITABLE!');
+console.log('🎯 REAL CONTENT DETECTION ACTIVE!');
+console.log('🔍 System now scans for actual text on your website');
 console.log('📝 Go to portal.mediacwc.com to edit any text on this website');
