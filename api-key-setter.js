@@ -80,7 +80,7 @@ window.refreshContent = refreshContent;
 
 // Log available functions
 console.log('=== Content Management System Loaded ===');
-console.log('✅ API Key configured: mcwc_duwiaanLefHb5RwEu5OhM89fuFlpNTqb');
+console.log('✅ API Key configured: mcwc_3jGfmZ0GCHJkXLHMQYcolPWS2FNp782c');
 console.log('🌐 ALL TEXT on this website is now editable through portal.mediacwc.com');
 console.log('');
 console.log('Available functions:');

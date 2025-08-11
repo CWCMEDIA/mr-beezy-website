@@ -3,7 +3,7 @@
 
 class ContentManager {
     constructor() {
-        this.apiKey = 'mcwc_duwiaanLefHb5RwEu5OhM89fuFlpNTqb';
+        this.apiKey = 'mcwc_3jGfmZ0GCHJkXLHMQYcolPWS2FNp782c';
         this.domain = window.location.hostname;
         this.content = null;
         this.init();
