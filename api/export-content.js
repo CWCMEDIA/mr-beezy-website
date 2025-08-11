@@ -1,7 +1,7 @@
 // Dynamic Content Scanner API Endpoint
 // Scans the ACTUAL text on your website and returns real content
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   // Set CORS headers for external access
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
