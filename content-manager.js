@@ -43,14 +43,103 @@ class ContentManager {
         // Get all text-containing elements
         const textElements = this.getAllTextElements();
         
+        // Map specific sections to portal-expected keys
+        this.mapSpecificSections();
+        
+        // Make remaining elements editable with generic keys
         textElements.forEach((element, index) => {
             const text = element.textContent.trim();
-            if (text && text.length > 0) {
+            if (text && text.length > 0 && !element.hasAttribute('data-content-key')) {
                 // Create a unique key based on content and position
                 const key = this.generateContentKey(element, text, index);
                 
                 // Make this element editable
                 this.makeElementEditable(element, key, text);
+            }
+        });
+    }
+
+    mapSpecificSections() {
+        // Map specific sections to the format your portal expects
+        const sectionMappings = {
+            // Hero Section
+            'hero-title': '.hero-title-main, .hero-title-sub',
+            'hero-subtitle': '.hero-title-sub',
+            'hero-description': '.hero-description',
+            'hero-cta': '.hero-buttons .btn, .hero-cta-button',
+            
+            // About Section
+            'about-title': '#about .section-title, .about-title',
+            'about-subtitle': '#about .about-text h3, .about-subtitle',
+            'about-paragraph1': '#about .about-text p:first-of-type',
+            'about-paragraph2': '#about .about-text p:nth-of-type(2)',
+            'about-stats-people': '#about .stat:nth-child(1) .stat-number',
+            'about-stats-institutions': '#about .stat:nth-child(2) .stat-number',
+            'about-stats-years': '#about .stat:nth-child(3) .stat-number',
+            'about-cta': '#about .about-cta-button .btn, .about-cta',
+            
+            // Services Section
+            'services-title': '#services .section-title, .services-title',
+            'service-corporate-title': '.service-card:nth-child(1) h3',
+            'service-corporate-description': '.service-card:nth-child(1) p',
+            'service-education-title': '.service-card:nth-child(2) h3',
+            'service-education-description': '.service-card:nth-child(2) p',
+            'service-sports-title': '.service-card:nth-child(3) h3',
+            'service-sports-description': '.service-card:nth-child(3) p',
+            'service-personal-title': '.service-card:nth-child(4) h3',
+            'service-personal-description': '.service-card:nth-child(4) p',
+            'service-portal-title': '.service-card:nth-child(5) h3',
+            'service-portal-description': '.service-card:nth-child(5) p',
+            'service-portal-cta': '.service-card:nth-child(5) .btn',
+            
+            // Previous Visits
+            'previous-visits-title': '.mr-beezy-action .section-title',
+            'previous-visits-education': '.action-videos .video-card:nth-child(1) h3',
+            'previous-visits-corporate': '.action-videos .video-card:nth-child(2) h3',
+            'previous-visits-sports': '.action-videos .video-card:nth-child(3) h3',
+            
+            // Testimonials
+            'testimonials-title': '#testimonials .section-title',
+            'testimonial-corporate-title': '.testimonial-card:nth-child(1) .author-info h4',
+            'testimonial-corporate-subtitle': '.testimonial-card:nth-child(1) .author-info span',
+            'testimonial-education-title': '.testimonial-card:nth-child(2) .author-info h4',
+            'testimonial-education-subtitle': '.testimonial-card:nth-child(2) .author-info span',
+            'testimonial-sports-title': '.testimonial-card:nth-child(3) .author-info h4',
+            'testimonial-sports-subtitle': '.testimonial-card:nth-child(3) .author-info span',
+            
+            // Contact Section
+            'contact-title': '#contact .section-title, .contact-title',
+            'contact-subtitle': '#contact .section-subtitle, .contact-subtitle',
+            'contact-email': '#contact .contact-item:nth-child(1) p, .contact-email',
+            'contact-phone': '#contact .contact-item:nth-child(2) p, .contact-phone',
+            'contact-form-button': '#contact #booking-form button, .contact-form-button',
+            
+            // Footer
+            'footer-tagline': '.footer-section:nth-child(1) p, .footer-tagline',
+            'footer-quick-links': '.footer-section:nth-child(2) h4, .footer-quick-links',
+            'footer-services': '.footer-section:nth-child(3) h4, .footer-services',
+            'footer-connect': '.footer-section:nth-child(4) h4, .footer-connect',
+            'footer-copyright': '.footer-bottom p, .footer-copyright',
+            
+            // Exit Intent Popup
+            'exit-intent-title': '#exitIntentPopup .exit-popup-title',
+            'exit-intent-message': '#exitIntentPopup .exit-popup-message',
+            'exit-intent-primary-button': '#exitIntentPopup .transform-btn',
+            'exit-intent-secondary-button': '#exitIntentPopup .stay-btn',
+            
+            // Brand Section
+            'brand-strapline-title': '.brand-strapline-title'
+        };
+        
+        // Apply the mappings
+        Object.keys(sectionMappings).forEach(key => {
+            const selector = sectionMappings[key];
+            const element = document.querySelector(selector);
+            if (element) {
+                const text = element.textContent.trim();
+                if (text) {
+                    this.makeElementEditable(element, key, text);
+                }
             }
         });
     }
@@ -172,7 +261,12 @@ class ContentManager {
         const content = {};
         document.querySelectorAll('[data-content-key]').forEach(el => {
             const key = el.getAttribute('data-content-key');
-            content[key] = el.textContent;
+            const text = el.textContent.trim();
+            
+            // Only include meaningful content (not empty or just whitespace)
+            if (text && text.length > 0 && text !== '\n' && text !== ' ') {
+                content[key] = text;
+            }
         });
         return content;
     }
