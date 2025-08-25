@@ -1600,6 +1600,31 @@ p {
     border-radius: 0 0 12px 12px;
 }
 
+/* Special styling for education video (vertical Instagram video) */
+.education-video {
+    object-fit: cover;
+    object-position: center 30%; /* Move video up so head isn't cut off */
+}
+
+/* Fullscreen styles for vertical videos */
+.education-video:fullscreen {
+    object-fit: contain;
+    object-position: center;
+    background: black;
+}
+
+.education-video:-webkit-full-screen {
+    object-fit: contain;
+    object-position: center;
+    background: black;
+}
+
+.education-video:-moz-full-screen {
+    object-fit: contain;
+    object-position: center;
+    background: black;
+}
+
 /* ===== TESTIMONIALS SECTION ===== */
 .testimonials {
     padding: var(--section-padding);

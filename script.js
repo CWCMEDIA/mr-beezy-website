@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initLoadingAnimation();
     initVideoModal();
     initLogoVideo();
+    initEducationVideo();
 });
 
 // ===== MOBILE NAVIGATION =====
@@ -802,5 +803,66 @@ function initLogoVideo() {
                 });
             }
         }, 100);
+    }
+}
+
+// ===== EDUCATION VIDEO HANDLING =====
+function initEducationVideo() {
+    const educationVideo = document.getElementById('educationVideo');
+    
+    if (educationVideo) {
+        // Handle fullscreen changes for vertical video
+        educationVideo.addEventListener('fullscreenchange', function() {
+            if (document.fullscreenElement === this) {
+                // Video is in fullscreen mode
+                this.style.objectFit = 'contain';
+                this.style.objectPosition = 'center';
+                this.style.backgroundColor = 'black';
+            } else {
+                // Video exited fullscreen mode
+                this.style.objectFit = 'cover';
+                this.style.objectPosition = 'center 30%';
+                this.style.backgroundColor = '';
+            }
+        });
+        
+        // Handle webkit fullscreen changes
+        educationVideo.addEventListener('webkitfullscreenchange', function() {
+            if (document.webkitFullscreenElement === this) {
+                this.style.objectFit = 'contain';
+                this.style.objectPosition = 'center';
+                this.style.backgroundColor = 'black';
+            } else {
+                this.style.objectFit = 'cover';
+                this.style.objectPosition = 'center 30%';
+                this.style.backgroundColor = '';
+            }
+        });
+        
+        // Handle moz fullscreen changes
+        educationVideo.addEventListener('mozfullscreenchange', function() {
+            if (document.mozFullScreenElement === this) {
+                this.style.objectFit = 'contain';
+                this.style.objectPosition = 'center';
+                this.style.backgroundColor = 'black';
+            } else {
+                this.style.objectFit = 'cover';
+                this.style.objectPosition = 'center 30%';
+                this.style.backgroundColor = '';
+            }
+        });
+        
+        // Handle MS fullscreen changes
+        educationVideo.addEventListener('MSFullscreenChange', function() {
+            if (document.msFullscreenElement === this) {
+                this.style.objectFit = 'contain';
+                this.style.objectPosition = 'center';
+                this.style.backgroundColor = 'black';
+            } else {
+                this.style.objectFit = 'cover';
+                this.style.objectPosition = 'center 30%';
+                this.style.backgroundColor = '';
+            }
+        });
     }
 } 
